@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 
-from DataLoader import DataLoader
+from dataloader import DataLoader
 
 
 class Evaluation(object):
@@ -178,24 +178,24 @@ class Evaluation(object):
 
 
 if __name__ == '__main__':
+    from config import args
     origin = DataLoader()
-    input_base = "../../data/origin_sq/"
-    path = "../../data/origin_sq/test.txt"
-    actor = "ped"
+    input_base = args.origin_input_base
+    path = os.path.join(input_base, 'test.txt')
+    actor = args.actor
     origin.variable_operate(input_base, path, actor)
     origin_x_y = origin.variable_get_data_with_window(2, each_len=2, stride=12)
 
     pred = DataLoader()
-    input_base = "../../data/result_model/model_4"
-    path = "../../data/result_model/model_4/data_out.txt"
-    actor = "ped"
+    input_base = args.result_input_base
+    path = os.path.join(input_base, 'data_out.txt')
     pred.operate(input_base, path, actor)
     pred_x_y = pred.get_data_with_window(4, 2)
     pred_info = pred.get_data()
 
     frame_list = [4, 10]
     eva = Evaluation(frame_list)
-    save_path = '../../data/eval/eval.txt'
-    skip = 1
+    save_path = args.eval_path
+    skip = 5
 
     eva.eval(origin_x_y, pred_x_y, pred_info, save_path, skip)

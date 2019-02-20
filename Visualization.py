@@ -4,7 +4,7 @@ import os
 import cv2
 import numpy as np
 
-from DataLoader import DataLoader
+from dataloader import DataLoader
 from util import coordinateTrans, parse_json
 
 
@@ -228,8 +228,8 @@ class Visualization(object):
                     and 0 <= x - 1 < self._W and 0 <= x + 1 < self._W:
                 img[y - 1:y + 1, x - 1:x + 1, :] = color
         if len(trace) > 0:
-            x, y = (int((self._OBS_WIDTH - trace[-1, 0]) / self._PIXEL_TO_M) + self._offx,
-                    int((self._OBS_FRONT - trace[-1, 1]) / self._PIXEL_TO_M) + 500 - self._offy)
+            x, y = (int((self._OBS_WIDTH - trace[-1, 1]) / self._PIXEL_TO_M) + self._offx,
+                    int((self._OBS_FRONT - trace[-1, 0]) / self._PIXEL_TO_M) + 500 - self._offy)
             if 0 <= y - 1 < self._H and 0 <= y + 1 < self._H\
                     and 0 <= x - 1 < self._W and 0 <= x + 1 < self._W:
                 img[y - 1:y + 1, x - 1:x + 1, :] = color
@@ -371,11 +371,7 @@ if __name__ == "__main__":
     result_info_path = os.path.join(result_input_base, 'data_out.txt')
     folders = origin.get_folder_name()
 
-    count = 0
     for folder in folders:
-        if count < 2:
-            count += 1
-            continue
         result = DataLoader()
         rd_root = args.rd_root
         result.operate(result_input_base, result_info_path, actor, foldername=[folder])
@@ -402,7 +398,7 @@ if __name__ == "__main__":
             for fn in os.listdir(save_folder_path):
                 if fn[0] != ".":
                     count += 1
-            end_fid = count
+            end_fid_ = count
 
         print("min: ", args.end_fid, " , ", end_fid_ - 2)
         end_fid = min(args.end_fid, end_fid_ - 2)

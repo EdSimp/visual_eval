@@ -35,4 +35,8 @@ parse.add_argument('--save_image_num', default=1500,
 
 parse.add_argument('--actor', default='ped', help='actor type:ved/peh')
 
+parse.add_argument('--eval_path',
+                   default="./eval.txt",
+                   help="A string recording eval txt path")
+
 args = parse.parse_args()

@@ -256,17 +256,17 @@ class DataLoader(object):
 
 
 if __name__ == '__main__':
+    from config import args
     origin = DataLoader()
-    input_base = "../../data/origin_sq/"
-    path = "../../data/origin_sq/test.txt"
-    actor = "veh"
-    origin.variable_operate(input_base, path, actor)
+    input_base = args.origin_input_base
+    origin_info_path = os.path.join(input_base, 'test.txt')
+    actor = args.actor
+    origin.variable_operate(args.origin_input_base, origin_info_path, actor)
     origin.variable_convert_data_to_dict(origin.variable_get_data(), stride=12)
     origin_x_y = origin.variable_get_data_with_window(2, each_len=2, stride=13)
 
     result = DataLoader()
-    input_base = "./data/result_sp/"
-    path = "./data/result_sp/data_out.txt"
-    actor = "veh"
-    result.operate(input_base, path, actor)
+    input_base = args.result_input_base
+    result_info_path = os.path.join(input_base, 'data_out.txt')
+    result.operate(input_base, result_info_path, actor)
     result_x_y = result.get_data_with_window(4, each_len=2)

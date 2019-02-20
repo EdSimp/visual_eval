@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from DataLoader import DataLoader
-from Evaluation import Evaluation
+from dataloader import DataLoader
+from evaluation import Evaluation
 from util import substring
 
 
@@ -613,7 +613,9 @@ if __name__ == '__main__':
                   help="A string recording actor to evaluate")
     @click.option('--is_eval_all', default=True, type=str,
                   help="all attr to eval")
-    def start(origin_path, result_path, eval_path, paint_save_path, actor, is_eval_all):
+    @click.option('--is_group_attr', default=False, help="if make group attr")
+    def start(origin_path, result_path, eval_path,
+     paint_save_path, actor, is_eval_all, is_group_attr):
         attr_name = ['velocity_mean', 'shake']
         origin = DataLoader()
         origin.variable_operate(origin_path, os.path.join(origin_path, 'test.txt'), actor)
@@ -641,23 +643,22 @@ if __name__ == '__main__':
                 getattr(attr, type_)()
                 getattr(attr, "paint_" + type_)(eva, eval_save_path, save_path=image_save_path)
 
-        # smooth & v <= 3
-        result_data = attr.get_result_data()
+        if is_group_attr:
+            # smooth & v <= 3
+            result_data = attr.get_result_data()
 
-        index1 = attr.select_continuous_attr(result_data, 'velocity_mean', 0, 3)
-        index2 = attr.select_discrete_attr(result_data, 'shakes', 'smooth')
-        index = (index1 & index2)
-        index = index.to_frame()
-        index.columns = ["un_normal"]
-        attr.concate_trace_result(index, is_result=True)
-        attr_type = [True, False]
-        save_path_pie = os.path.join(paint_save_path, 'un_normal_pie.png')
-        attr.paint_discrete_pie("un_normal", attr_type, save_path=save_path_pie)
-        save_path_pie = os.path.join(paint_save_path, 'un_normal_trace.png')
-        attr.paint_discrete_trace(eva, "un_normal",
-                                  attr_type,
-                                  save_path=save_path_pie,
-                                  eval_save_path=eval_save_path)
+            index1 = attr.select_continuous_attr(result_data, 'velocity_mean', 0, 3)
+            index2 = attr.select_discrete_attr(result_data, 'shakes', 'smooth')
+            index = (index1 & index2)
+            index = index.to_frame()
+            index.columns = ["un_normal"]
+            attr.concate_trace_result(index, is_result=True)
+            attr_type = [True, False]
+            save_path_pie = os.path.join(paint_save_path, 'un_normal_pie.png')
+            attr.paint_discrete_pie("un_normal", attr_type, save_path=save_path_pie)
+            save_path_pie = os.path.join(paint_save_path, 'un_normal_trace.png')
+            attr.paint_discrete_trace(eva, "un_normal",
+             attr_type, save_path=save_path_pie, eval_save_path=eval_save_path)
 
     # pylint: disable=no-value-for-parameter
     start()
